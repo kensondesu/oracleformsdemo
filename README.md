@@ -96,6 +96,12 @@ Then open:
 az login
 az group create --name acmestore-rg --location eastus
 
+# Store secrets in Key Vault (recommended)
+az keyvault create --name acmestore-kv -g acmestore-rg
+az keyvault secret set --vault-name acmestore-kv --name db-password --value '<strong-password>'
+az keyvault secret set --vault-name acmestore-kv --name jwt-secret --value '<random-64-char-string>'
+
+# Deploy infrastructure (pass secrets as command-line parameters to avoid storing them in files)
 az deployment group create \
   --resource-group acmestore-rg \
   --template-file infra/main.bicep \

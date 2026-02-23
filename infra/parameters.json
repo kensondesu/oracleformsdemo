@@ -5,7 +5,17 @@
     "appName": { "value": "acmestore" },
     "location": { "value": "eastus" },
     "registryName": { "value": "acmestoreacr" },
-    "dbPassword": { "value": "REPLACE_WITH_STRONG_PASSWORD" },
-    "jwtSecret": { "value": "REPLACE_WITH_LONG_RANDOM_SECRET" }
+    "dbPassword": {
+      "reference": {
+        "keyVault": { "id": "/subscriptions/<subscription-id>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<vault-name>" },
+        "secretName": "db-password"
+      }
+    },
+    "jwtSecret": {
+      "reference": {
+        "keyVault": { "id": "/subscriptions/<subscription-id>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<vault-name>" },
+        "secretName": "jwt-secret"
+      }
+    }
   }
 }

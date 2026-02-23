@@ -102,7 +102,7 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
       ]
       secrets: [
         { name: 'acr-password', value: acr.listCredentials().passwords[0].value }
-        { name: 'db-password', value: dbPassword }
+        { name: 'database-url', value: 'postgresql+asyncpg://pgadmin:${dbPassword}@${postgres.properties.fullyQualifiedDomainName}:5432/acmedb' }
         { name: 'jwt-secret', value: jwtSecret }
       ]
     }
@@ -113,10 +113,7 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
           image: '${acr.properties.loginServer}/${appName}-backend:latest'
           resources: { cpu: json('0.5'), memory: '1Gi' }
           env: [
-            {
-              name: 'DATABASE_URL'
-              value: 'postgresql+asyncpg://pgadmin:${dbPassword}@${postgres.properties.fullyQualifiedDomainName}:5432/acmedb'
-            }
+            { name: 'DATABASE_URL', secretRef: 'database-url' }
             { name: 'SECRET_KEY', secretRef: 'jwt-secret' }
             { name: 'CORS_ORIGINS', value: '["https://${appName}-frontend.${cae.properties.defaultDomain}"]' }
           ]
