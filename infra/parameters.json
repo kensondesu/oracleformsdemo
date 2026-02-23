@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": { "value": "acmestore" },
+    "location": { "value": "eastus" },
+    "registryName": { "value": "acmestoreacr" },
+    "dbPassword": { "value": "REPLACE_WITH_STRONG_PASSWORD" },
+    "jwtSecret": { "value": "REPLACE_WITH_LONG_RANDOM_SECRET" }
+  }
+}
