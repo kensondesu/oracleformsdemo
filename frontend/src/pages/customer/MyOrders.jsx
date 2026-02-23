@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 import api from '../../utils/api'
 import LoadingSpinner from '../../components/LoadingSpinner'
 
@@ -25,7 +26,7 @@ export default function MyOrders() {
       {orders.length === 0 ? (
         <div className="card text-center py-12">
           <p className="text-gray-400 text-lg">You haven't placed any orders yet.</p>
-          <a href="/shop" className="btn-primary inline-block mt-4">Start Shopping</a>
+          <Link to="/shop" className="btn-primary inline-block mt-4">Start Shopping</Link>
         </div>
       ) : (
         <div className="space-y-4">

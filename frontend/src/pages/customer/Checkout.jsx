@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import api from '../../utils/api'
 import Alert from '../../components/Alert'
 
@@ -39,7 +39,7 @@ export default function Checkout() {
   if (cart.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">Your cart is empty. <a href="/shop" className="text-primary-600 hover:underline">Continue shopping</a></p>
+        <p className="text-gray-500">Your cart is empty. <Link to="/shop" className="text-primary-600 hover:underline">Continue shopping</Link></p>
       </div>
     )
   }

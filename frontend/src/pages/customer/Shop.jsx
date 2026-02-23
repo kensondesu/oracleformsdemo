@@ -59,7 +59,12 @@ export default function Shop() {
                   <span className="text-sm">{item.name} × {item.qty}</span>
                   <div className="flex items-center space-x-3">
                     <span className="text-sm font-medium">${(Number(item.price) * item.qty).toFixed(2)}</span>
-                    <button onClick={() => removeFromCart(item.id)} className="text-red-500 text-xs">✕</button>
+                    <button
+                      onClick={() => removeFromCart(item.id)}
+                      className="text-red-500 text-xs"
+                      aria-label={`Remove ${item.name} from cart`}
+                      title={`Remove ${item.name} from cart`}
+                    >✕</button>
                   </div>
                 </div>
               ))}

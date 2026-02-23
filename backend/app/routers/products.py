@@ -13,7 +13,7 @@ from app.schemas import (
     ProductResponse,
     ProductUpdate,
 )
-from app.routers.deps import require_admin, optional_customer
+from app.routers.deps import require_admin
 
 router = APIRouter(prefix="/products", tags=["products"])
 cat_router = APIRouter(prefix="/categories", tags=["categories"])

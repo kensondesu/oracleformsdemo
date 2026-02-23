@@ -4,12 +4,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.database import engine
-from app.models import (
-    Branch, Category, Customer, Department, Discount,
-    Employee, Order, OrderItem, Product, Shipment,
-    Store, StoreInventory, Supply, User,
-)
 from app.routers import router as auth_router
 from app.routers.branches import router as branch_router
 from app.routers.customers import router as customer_router
@@ -22,10 +16,8 @@ from app.routers.users import router as user_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Create tables on startup (idempotent – won't drop existing data)
-    from app.database import Base
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    # Database schema is managed via Alembic migrations.
+    # Run `alembic upgrade head` before starting the application.
     yield
 
 

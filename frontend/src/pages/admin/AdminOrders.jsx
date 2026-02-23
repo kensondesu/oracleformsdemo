@@ -38,7 +38,7 @@ export default function AdminOrders() {
         <div className="card border-primary-200">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Order #{selected.id} – Update Status</h2>
-            <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-gray-600">✕</button>
+            <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-gray-600" aria-label="Close order details" title="Close order details">✕</button>
           </div>
           <div className="flex flex-wrap gap-2">
             {STATUS_OPTIONS.map(s => (
