@@ -22,6 +22,9 @@ async def create_user(payload: UserCreate, db: AsyncSession = Depends(get_db), _
     existing = await db.execute(select(User).where(User.username == payload.username))
     if existing.scalar_one_or_none():
         raise HTTPException(status_code=400, detail="Username already exists")
+    existing_email = await db.execute(select(User).where(User.email == payload.email))
+    if existing_email.scalar_one_or_none():
+        raise HTTPException(status_code=400, detail="Email already exists")
     user = User(
         username=payload.username,
         password_hash=hash_password(payload.password),

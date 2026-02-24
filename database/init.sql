@@ -160,11 +160,12 @@ CREATE TABLE IF NOT EXISTS shipments (
 );
 
 -- Seed default admin user (password: admin123)
+-- WARNING: Development seed data only. Do NOT run in production.
 INSERT INTO users (username, password_hash, email, role) VALUES
   ('admin', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'admin@acme.com', 'superadmin')
 ON CONFLICT (username) DO NOTHING;
 
--- Seed categories
+-- Seed categories (safe to run in all environments)
 INSERT INTO categories (name, description) VALUES
   ('Electronics', 'Electronic devices and accessories'),
   ('Clothing', 'Apparel and fashion'),
@@ -172,7 +173,7 @@ INSERT INTO categories (name, description) VALUES
   ('Office Supplies', 'Office and stationery products')
 ON CONFLICT DO NOTHING;
 
--- Seed departments
+-- Seed departments (safe to run in all environments)
 INSERT INTO departments (name, location) VALUES
   ('Sales', 'Main Office'),
   ('IT', 'Tech Building'),
@@ -180,7 +181,7 @@ INSERT INTO departments (name, location) VALUES
   ('Operations', 'Warehouse')
 ON CONFLICT DO NOTHING;
 
--- Seed branches
+-- Seed branches (safe to run in all environments)
 INSERT INTO branches (name, location, phone) VALUES
   ('HQ Branch', '123 Main St, New York, NY 10001', '+1-212-555-0100'),
   ('West Branch', '456 Oak Ave, Los Angeles, CA 90001', '+1-310-555-0200'),

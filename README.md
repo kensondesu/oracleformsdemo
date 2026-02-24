@@ -98,21 +98,22 @@ az group create --name acmestore-rg --location eastus
 
 # Store secrets in Key Vault (recommended)
 az keyvault create --name acmestore-kv -g acmestore-rg
-az keyvault secret set --vault-name acmestore-kv --name db-password --value '<strong-password>'
+az keyvault secret set --vault-name acmestore-kv --name db-admin-password --value '<strong-admin-password>'
+az keyvault secret set --vault-name acmestore-kv --name db-app-password --value '<strong-app-password>'
 az keyvault secret set --vault-name acmestore-kv --name jwt-secret --value '<random-64-char-string>'
 
-# Deploy infrastructure (pass secrets as command-line parameters to avoid storing them in files)
+# Deploy infrastructure (secrets are pulled from Key Vault via parameters.json references)
 az deployment group create \
   --resource-group acmestore-rg \
   --template-file infra/main.bicep \
-  --parameters infra/parameters.json \
-  --parameters dbPassword='<strong-password>' jwtSecret='<random-64-char-string>'
+  --parameters infra/parameters.json
 ```
 
 ### 2. Push images to ACR
 
 ```bash
 ACR=$(az acr show -g acmestore-rg -n acmestoreacr --query loginServer -o tsv)
+# ACR admin user is disabled; authenticate via Azure AD (service principal / managed identity)
 az acr login --name acmestoreacr
 
 docker build -t $ACR/acmestore-backend:latest ./backend
@@ -125,10 +126,8 @@ docker push $ACR/acmestore-frontend:latest
 
 | Secret | Description |
 |--------|-------------|
-| `AZURE_CREDENTIALS` | JSON output of `az ad sp create-for-rbac` |
+| `AZURE_CREDENTIALS` | JSON output of `az ad sp create-for-rbac` (also used for ACR auth) |
 | `ACR_LOGIN_SERVER` | e.g. `acmestoreacr.azurecr.io` |
-| `ACR_USERNAME` | ACR admin username |
-| `ACR_PASSWORD` | ACR admin password |
 
 After setting the secrets, push to `main` to trigger the CI/CD pipeline.
 

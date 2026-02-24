@@ -62,31 +62,35 @@ async def place_order(
     db: AsyncSession = Depends(get_db),
     current=Depends(require_customer),
 ):
-    total = sum(
-        item.unit_price * item.quantity * (1 - item.discount_pct / 100)
-        for item in payload.items
-    )
+    total = 0.0
     order = Order(
         customer_id=current["user_id"],
         shipping_address=payload.shipping_address,
         branch_id=payload.branch_id,
-        total_amount=round(total, 2),
+        total_amount=0.0,
         status="pending",
     )
     db.add(order)
     await db.flush()  # get order.id
 
     for item in payload.items:
+        product_result = await db.execute(select(Product).where(Product.id == item.product_id))
+        product = product_result.scalar_one_or_none()
+        if not product:
+            raise HTTPException(status_code=404, detail=f"Product {item.product_id} not found")
+        unit_price = float(product.price)
+        total += unit_price * item.quantity * (1 - item.discount_pct / 100)
         db.add(
             OrderItem(
                 order_id=order.id,
                 product_id=item.product_id,
                 quantity=item.quantity,
-                unit_price=item.unit_price,
+                unit_price=unit_price,
                 discount_pct=item.discount_pct,
             )
         )
 
+    order.total_amount = round(total, 2)
     await db.commit()
     await db.refresh(order)
     return await _build_order_response(order, db)
@@ -111,7 +115,7 @@ async def create_shipment(payload: ShipmentCreate, db: AsyncSession = Depends(ge
 
 
 @ship_router.get("/{order_id}", response_model=ShipmentResponse)
-async def get_shipment(order_id: int, db: AsyncSession = Depends(get_db)):
+async def get_shipment(order_id: int, db: AsyncSession = Depends(get_db), _=Depends(require_customer)):
     result = await db.execute(select(Shipment).where(Shipment.order_id == order_id))
     shipment = result.scalar_one_or_none()
     if not shipment:

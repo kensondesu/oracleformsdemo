@@ -3,7 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.models import Store, StoreInventory, Supply
+from app.models import Store, Supply
 from app.schemas import StoreCreate, StoreResponse, SupplyCreate, SupplyResponse
 from app.routers.deps import require_admin
 
