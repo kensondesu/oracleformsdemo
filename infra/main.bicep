@@ -86,7 +86,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
 
 // ── Private DNS Zone for PostgreSQL ──────────────────────────────────────────
 resource postgresDns 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: '${appName}-pg.private.postgres.database.azure.com'
+  name: '${appName}-postgres.private.postgres.database.azure.com'
   location: 'global'
 }
 
@@ -177,7 +177,7 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
       ingress: {
         external: true
         targetPort: 8000
-        transport: 'http'
+        transport: 'auto'
       }
       registries: [
         {

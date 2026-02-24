@@ -7,8 +7,6 @@ from app.models import Department, Employee
 from app.schemas import DepartmentCreate, DepartmentResponse, EmployeeCreate, EmployeeResponse, EmployeeUpdate
 from app.routers.deps import require_admin
 
-router = APIRouter(tags=["employees"])
-
 dept_router = APIRouter(prefix="/departments")
 emp_router = APIRouter(prefix="/employees")
 

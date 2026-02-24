@@ -23,7 +23,6 @@ export default function Checkout() {
         items: cart.map(i => ({
           product_id: i.id,
           quantity: i.qty,
-          unit_price: Number(i.price),
           discount_pct: 0,
         })),
       }

@@ -46,6 +46,9 @@ async def register_customer(payload: CustomerCreate, db: AsyncSession = Depends(
     existing = await db.execute(select(Customer).where(Customer.username == payload.username))
     if existing.scalar_one_or_none():
         raise HTTPException(status_code=400, detail="Username already exists")
+    existing_email = await db.execute(select(Customer).where(Customer.email == payload.email))
+    if existing_email.scalar_one_or_none():
+        raise HTTPException(status_code=400, detail="Email already exists")
     customer = Customer(
         username=payload.username,
         password_hash=hash_password(payload.password),

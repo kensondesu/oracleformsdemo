@@ -1,7 +1,7 @@
 from datetime import date, datetime
-from typing import Optional
+from typing import Literal, Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
@@ -25,7 +25,14 @@ class UserCreate(BaseModel):
     username: str
     password: str
     email: EmailStr
-    role: str = "admin"
+    role: Literal['admin', 'superadmin'] = 'admin'
+
+    @field_validator('password')
+    @classmethod
+    def password_min_length(cls, v: str) -> str:
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters')
+        return v
 
 
 class UserUpdate(BaseModel):
@@ -47,6 +54,13 @@ class UserResponse(BaseModel):
 class ChangePassword(BaseModel):
     current_password: str
     new_password: str
+
+    @field_validator('new_password')
+    @classmethod
+    def password_min_length(cls, v: str) -> str:
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters')
+        return v
 
 
 # ── Department ────────────────────────────────────────────────────────────────
@@ -140,6 +154,13 @@ class CustomerCreate(BaseModel):
     email: EmailStr
     phone: Optional[str] = None
     address: Optional[str] = None
+
+    @field_validator('password')
+    @classmethod
+    def password_min_length(cls, v: str) -> str:
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters')
+        return v
 
 
 class CustomerUpdate(BaseModel):
@@ -281,7 +302,6 @@ class SupplyResponse(BaseModel):
 class OrderItemCreate(BaseModel):
     product_id: int
     quantity: int
-    unit_price: float
     discount_pct: float = 0.0
 
 
@@ -304,7 +324,7 @@ class OrderCreate(BaseModel):
 
 
 class OrderStatusUpdate(BaseModel):
-    status: str
+    status: Literal['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']
 
 
 class OrderResponse(BaseModel):

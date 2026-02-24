@@ -16,8 +16,9 @@ from app.routers.users import router as user_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Database schema is managed via Alembic migrations.
-    # Run `alembic upgrade head` before starting the application.
+    # Database schema is initialised from database/init.sql via Docker
+    # (mounted at /docker-entrypoint-initdb.d/init.sql) for local development.
+    # For production, apply schema changes manually before deploying.
     yield
 
 
